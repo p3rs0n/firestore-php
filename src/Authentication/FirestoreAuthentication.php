@@ -15,7 +15,7 @@ class FirestoreAuthentication
      *
      * @var string
      */
-    private $authRoot = 'https://identitytoolkit.googleapis.com/v1/accounts:';
+    private $authRoot = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/';
 
     /**
      * Firestore Client object
@@ -82,7 +82,7 @@ class FirestoreAuthentication
      */
     public function signInEmailPassword($email, $password, $setToken = true)
     {
-        $response = $this->authRequest('POST', 'accounts:signInWithPassword', [
+        $response = $this->authRequest('POST', 'verifyPassword', [
             'form_params' => [
                 'email' => $email,
                 'password' => $password,
