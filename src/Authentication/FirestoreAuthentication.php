@@ -15,7 +15,7 @@ class FirestoreAuthentication
      *
      * @var string
      */
-    private $authRoot = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/';
+    private $authRoot = 'https://identitytoolkit.googleapis.com/v1/accounts:';
 
     /**
      * Firestore Client object
@@ -82,7 +82,7 @@ class FirestoreAuthentication
      */
     public function signInEmailPassword($email, $password, $setToken = true)
     {
-        $response = $this->authRequest('POST', 'verifyPassword', [
+        $response = $this->authRequest('POST', 'accounts:signInWithPassword', [
             'form_params' => [
                 'email' => $email,
                 'password' => $password,
@@ -152,7 +152,9 @@ class FirestoreAuthentication
 
             return FirestoreHelper::decode((string) $this->client->getLastResponse()->getBody());
         } catch (BadResponseException $exception) {
-            $this->setLastResponse($exception->getResponse());
+            if (!empty($this->client) && method_exists($this->client, 'setLastResponse')) {
+                $this->client->setLastResponse($exception->getResponse());
+            }
             $this->handleError($exception);
         }
     }
